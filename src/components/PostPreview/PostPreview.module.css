@@ -39,3 +39,9 @@
     line-height: 24px;
     font-style: normal;
 }
+.buttonContainer{
+    display: flex;
+    flex-wrap: nowrap;
+    width: 70%;
+    margin: 0 auto;
+}

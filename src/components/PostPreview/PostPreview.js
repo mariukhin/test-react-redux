@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -13,24 +13,48 @@ function randomDate(start, end) {
   );
 }
 
-// eslint-disable-next-line no-shadow
-const PostPreview = ({ id, title, body, creator, date, setCurrentPostId }) => (
-  <div className={styles.postContainer}>
-    <div className={styles.wrapper}>
-      <div className={styles.infoPostBlock}>
-        <p className={styles.creator}>{creator}</p>
-        <p>published {date !== '' ? changeDate(date) : date}</p>
+class PostPreview extends Component {
+  state = {
+    id: this.props.id,
+  };
+
+  deleteBtn = e => {
+    const { onDelete } = this.props;
+    e.preventDefault();
+    onDelete({ ...this.state });
+  };
+
+  render() {
+    const {
+      id,
+      title,
+      body,
+      creator,
+      date,
+      setCurrentPostId,
+    } = this.props;
+    return (
+      <div className={styles.postContainer}>
+        <div className={styles.wrapper}>
+          <div className={styles.infoPostBlock}>
+            <p className={styles.creator}>{creator}</p>
+            <p>published {date !== '' ? changeDate(date) : date}</p>
+          </div>
+          <p className={styles.postTitle}>{title}</p>
+          <p className={styles.postBody}>{body}</p>
+          <div className={styles.buttonContainer}>
+            <Button onClick={() => setCurrentPostId(id)}>
+              <NavLink to={`/posts/${id}`} className={styles.link}>
+                Read more
+              </NavLink>
+            </Button>
+            <Button onClick={this.deleteBtn}>Delete</Button>
+          </div>
+        </div>
       </div>
-      <p className={styles.postTitle}>{title}</p>
-      <p className={styles.postBody}>{body}</p>
-      <Button onClick={() => setCurrentPostId(id)}>
-        <NavLink to={`/posts/${id}`} className={styles.link}>
-          Read more
-        </NavLink>
-      </Button>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 PostPreview.propTypes = {
   id: PropTypes.number.isRequired,
@@ -39,6 +63,7 @@ PostPreview.propTypes = {
   creator: PropTypes.string,
   date: PropTypes.string,
   setCurrentPostId: PropTypes.func,
+  onDelete: PropTypes.func.isRequired,
 };
 PostPreview.defaultProps = {
   // date: randomDate(new Date(2012, 0, 1), new Date()),

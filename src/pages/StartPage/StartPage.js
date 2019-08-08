@@ -7,27 +7,52 @@ import * as postsOperations from '../../redux/posts/postsOperations';
 import Loader from '../../components/shared/Loader/Loader';
 import Button from '../../components/shared/Button/Button';
 import styles from './StartPage.module.css';
-
+import Modal from '../../components/shared/Modal/Modal';
+import PostEditor from '../../components/PostEditor/PostEditor';
 
 class StartPage extends Component {
+  state = {
+    modalShow: false,
+  };
 
   componentDidMount() {
     const { fetchPosts } = this.props;
     fetchPosts();
   }
 
-  onCreatePost = e => {
-    e.preventDefault();
+  onModalHandle = () => {
+    this.setState(state => ({
+      modalShow: !state.modalShow,
+    }));
   };
 
-  // readMoreEvent = e => {
-  //   const { fetchCurrentPost } = this.props;
-  //   e.preventDefault();
+  onCreatePost = e => {
+    e.preventDefault();
+    this.onModalHandle();
+  };
 
-  // };
+
+  addPost = post => {
+    const { createPost } = this.props;
+    const infoDate = new Date(Date.now());
+    const postToAdd = {
+      ...post,
+      date: infoDate.toLocaleDateString(),
+    };
+    createPost(postToAdd);
+    this.onModalHandle();
+  };
+
+  removePost = post => {
+    const { deletePost } = this.props;
+    deletePost(post.id);
+  }
+;
 
   render() {
     const { posts, loading } = this.props;
+    const { modalShow } = this.state;
+
     return (
       <div className={styles.container}>
         <Button onClick={this.onCreatePost}>Create new post</Button>
@@ -36,10 +61,19 @@ class StartPage extends Component {
           (!loading && (
             <div className={styles.postBlock}>
               {posts.map(item => (
-                <PostPreview key={item.id} {...item} />
+                <PostPreview
+                  key={item.id}
+                  onDelete={this.removePost}
+                  {...item}
+                />
               ))}
             </div>
           ))}
+        {modalShow && (
+          <Modal onClose={this.onModalHandle}>
+            <PostEditor onSave={this.addPost} onCancel={this.onModalHandle} />
+          </Modal>
+        )}
       </div>
     );
   }
@@ -56,6 +90,8 @@ StartPage.propTypes = {
   ).isRequired,
   fetchPosts: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  createPost: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => ({
   posts: postsSelectors.getPosts(state),
@@ -63,9 +99,11 @@ const mapStateToProps = state => ({
   error: postsSelectors.error(state),
 });
 
-const mapDispatchToProps = {
+const mapDispatchToProps = dispatch => ({
   fetchPosts: postsOperations.fetchPosts,
-};
+  createPost: post => dispatch(postsOperations.createPost(post)),
+  deletePost: postId => dispatch(postsOperations.deletePost(postId)),
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps,

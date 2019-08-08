@@ -17,3 +17,37 @@ export const fetchPostsError = error => ({
     error,
   },
 });
+export const createPostStart = () => ({
+  type: ActionType.CREATE_POST_START,
+});
+
+export const createPostSuccess = post => ({
+  type: ActionType.CREATE_POST_SUCCESS,
+  payload: {
+    post,
+  },
+});
+
+export const createPostError = error => ({
+  type: ActionType.CREATE_POST_ERROR,
+  payload: {
+    error,
+  },
+});
+export const deletePostStart = () => ({
+  type: ActionType.DELETE_POST_START,
+});
+
+export const deletePostSuccess = id => ({
+  type: ActionType.DELETE_POST_SUCCESS,
+  payload: {
+    id,
+  },
+});
+
+export const deletePostError = error => ({
+  type: ActionType.DELETE_POST_ERROR,
+  payload: {
+    error,
+  },
+});

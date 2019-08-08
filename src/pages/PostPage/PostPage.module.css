@@ -11,6 +11,12 @@
 .wrapper{
     padding: 25px;
 }
+.span{
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #b9bfc0;
+    margin-bottom: 15px;
+}
 .postTitle{
     text-align: center;
     font-size: 34px;
@@ -19,19 +25,36 @@
 }
 
 .creatorText{
-    text-align: center;
+    text-align: right;
     font-size: 18px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 .postBody{
     text-align: justify;
     font-size: 20px;
     line-height: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 .buttonContainer{
     display: flex;
     justify-content: space-between;
     width: 30%;
     margin: 0 auto;
+}
+.commentContainer{
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+.commentTitle{
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+.commentText{
+    text-align: justify;
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 10px;
 }
