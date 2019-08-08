@@ -10,11 +10,10 @@
 .wrapper{
     padding: 15px;
 }
-.infoPostBlock{
+.creatorText{
+    text-align: center;
     font-size: 14px;
     margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
 }
 .creator{
     margin-right: 5px;

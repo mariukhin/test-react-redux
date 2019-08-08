@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withToastManager } from 'react-toast-notifications';
 import styles from './PostEditor.module.css';
@@ -10,6 +10,7 @@ class PostEditor extends Component {
     title: this.props.title,
     creator: this.props.creator,
     body: this.props.body,
+    comment: this.props.comment,
   };
 
   handleChange = e => {
@@ -36,10 +37,17 @@ class PostEditor extends Component {
   };
 
   handleSubmit = e => {
-    const { onSave } = this.props;
-    const { title, creator, body } = this.state;
+    const { onSave, onComment } = this.props;
+    const { title, creator, body, comment } = this.state;
     e.preventDefault();
-    if (title === '' || creator === '' || body === '') {
+    if (onComment) {
+      if (comment === '') {
+        this.addNotification('Please fill in all fields');
+      } else {
+        onSave({ ...this.state });
+        this.reset();
+      }
+    } else if (title === '' || creator === '' || body === '') {
       this.addNotification('Please fill in all fields');
     } else {
       onSave({ ...this.state });
@@ -48,34 +56,48 @@ class PostEditor extends Component {
   };
 
   render() {
-    const { creator, title, body } = this.state;
-    const { onCancel } = this.props;
+    const { creator, title, body, comment } = this.state;
+    const { onCancel, onComment } = this.props;
 
     return (
       <form className={styles.form} onSubmit={this.handleSubmit}>
-        <input
-          className={styles.input}
-          type="text"
-          name="creator"
-          value={creator}
-          onChange={this.handleChange}
-          placeholder="Enter your name"
-        />
-        <input
-          className={styles.input}
-          type="text"
-          name="title"
-          value={title}
-          onChange={this.handleChange}
-          placeholder="Enter post title"
-        />
-        <textarea
-          className={styles.textarea}
-          name="body"
-          value={body}
-          placeholder="Write post"
-          onChange={this.handleChange}
-        />
+        {onComment ? (
+          <Fragment>
+            <textarea
+              className={styles.textarea}
+              name="comment"
+              value={comment}
+              placeholder="Write comment"
+              onChange={this.handleChange}
+            />
+          </Fragment>
+        ) : (
+          <Fragment>
+            <input
+              className={styles.input}
+              type="text"
+              name="creator"
+              value={creator}
+              onChange={this.handleChange}
+              placeholder="Enter your name"
+            />
+            <input
+              className={styles.input}
+              type="text"
+              name="title"
+              value={title}
+              onChange={this.handleChange}
+              placeholder="Enter post title"
+            />
+            <textarea
+              className={styles.textarea}
+              name="body"
+              value={body}
+              placeholder="Write post"
+              onChange={this.handleChange}
+            />
+          </Fragment>
+        )}
 
         <div className={styles.buttonContainer}>
           <Button type="submit">Save</Button>
@@ -96,10 +118,14 @@ PostEditor.propTypes = {
     remove: PropTypes.func,
     toasts: PropTypes.array,
   }).isRequired,
+  comment: PropTypes.string,
+  onComment: PropTypes.bool,
 };
 PostEditor.defaultProps = {
   title: '',
   creator: '',
   body: '',
+  comment: '',
+  onComment: false,
 };
 export default withToastManager(PostEditor);

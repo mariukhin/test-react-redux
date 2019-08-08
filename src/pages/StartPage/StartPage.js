@@ -31,7 +31,6 @@ class StartPage extends Component {
     this.onModalHandle();
   };
 
-
   addPost = post => {
     const { createPost } = this.props;
     const infoDate = new Date(Date.now());
@@ -46,8 +45,7 @@ class StartPage extends Component {
   removePost = post => {
     const { deletePost } = this.props;
     deletePost(post.id);
-  }
-;
+  };
 
   render() {
     const { posts, loading } = this.props;

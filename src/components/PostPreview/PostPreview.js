@@ -7,12 +7,6 @@ import Button from '../shared/Button/Button';
 import { setCurrentPostId } from '../../redux/currentPost/currentPostActionCreators';
 import { changeDate } from '../../service/helper';
 
-function randomDate(start, end) {
-  return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime()),
-  );
-}
-
 class PostPreview extends Component {
   state = {
     id: this.props.id,
@@ -25,21 +19,15 @@ class PostPreview extends Component {
   };
 
   render() {
-    const {
-      id,
-      title,
-      body,
-      creator,
-      date,
-      setCurrentPostId,
-    } = this.props;
+    const { id, title, body, creator, date, setCurrentPostId } = this.props;
     return (
       <div className={styles.postContainer}>
         <div className={styles.wrapper}>
-          <div className={styles.infoPostBlock}>
-            <p className={styles.creator}>{creator}</p>
-            <p>published {date !== '' ? changeDate(date) : date}</p>
-          </div>
+          {creator && (
+            <p className={styles.creatorText}>
+              {creator} published {changeDate(date)}
+            </p>
+          )}
           <p className={styles.postTitle}>{title}</p>
           <p className={styles.postBody}>{body}</p>
           <div className={styles.buttonContainer}>
@@ -66,9 +54,8 @@ PostPreview.propTypes = {
   onDelete: PropTypes.func.isRequired,
 };
 PostPreview.defaultProps = {
-  // date: randomDate(new Date(2012, 0, 1), new Date()),
   creator: '',
-  date: '',
+  date: '20.12.2017',
   setCurrentPostId: null,
 };
 const mapDispatchToProps = dispatch => ({

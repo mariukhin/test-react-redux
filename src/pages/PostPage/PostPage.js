@@ -13,6 +13,7 @@ import { changeDate } from '../../service/helper';
 class PostPage extends Component {
   state = {
     modalShow: false,
+    commentModal: false,
   };
 
   componentDidMount() {
@@ -26,20 +27,48 @@ class PostPage extends Component {
     }));
   };
 
+  onCommentModalHandle = () => {
+    this.setState(state => ({
+      commentModal: !state.commentModal,
+    }));
+  };
+
   onEditPost = e => {
     e.preventDefault();
     this.onModalHandle();
+  };
+
+  onAddComment = e => {
+    e.preventDefault();
+    this.onCommentModalHandle();
   };
 
   editPost = post => {
     const { updatePost } = this.props;
     const infoDate = new Date(Date.now());
     const postToUpdate = {
-      ...post,
+      id: post.id,
+      creator: post.creator,
+      title: post.title,
+      body: post.body,
       date: infoDate.toLocaleDateString(),
     };
     updatePost(postToUpdate);
     this.onModalHandle();
+  };
+
+  addComment = comment => {
+    const {
+      createComment,
+      currentPost: { comments },
+    } = this.props;
+    const commentToAdd = {
+      postId: comment.id,
+      body: comment.comment,
+    };
+    createComment(commentToAdd);
+    comments.push(commentToAdd);
+    this.onCommentModalHandle();
   };
 
   handleBtnBack = e => {
@@ -54,7 +83,7 @@ class PostPage extends Component {
       currentPost,
       loading,
     } = this.props;
-    const { modalShow } = this.state;
+    const { modalShow, commentModal } = this.state;
     return (
       <>
         {!currentPost || (loading && <Loader />)}
@@ -62,9 +91,11 @@ class PostPage extends Component {
           (!loading && (
             <div className={styles.container}>
               <div className={styles.wrapper}>
-                <p className={styles.creatorText}>
-                  {creator} published {date !== '' ? changeDate(date) : date}
-                </p>
+                {creator && (
+                  <p className={styles.creatorText}>
+                    {creator} published {changeDate(date)}
+                  </p>
+                )}
                 <p className={styles.postTitle}>{title}</p>
                 <p className={styles.postBody}>{body}</p>
                 <span className={styles.span} />
@@ -79,7 +110,7 @@ class PostPage extends Component {
                       ))}
                     </div>
                   )}
-                  <Button>Add comment</Button>
+                  <Button onClick={this.onAddComment}>Add comment</Button>
                 </div>
                 <span className={styles.span} />
                 <div className={styles.buttonContainer}>
@@ -101,6 +132,16 @@ class PostPage extends Component {
             />
           </Modal>
         )}
+        {commentModal && (
+          <Modal onClose={this.onCommentModalHandle}>
+            <PostEditor
+              id={id}
+              onComment
+              onSave={this.addComment}
+              onCancel={this.onCommentModalHandle}
+            />
+          </Modal>
+        )}
       </>
     );
   }
@@ -119,6 +160,7 @@ PostPage.propTypes = {
   history: PropTypes.shape().isRequired,
   loading: PropTypes.bool.isRequired,
   updatePost: PropTypes.func.isRequired,
+  createComment: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => ({
   currentPostId: currentPostSelectors.getCurrentPostId(state),
@@ -131,6 +173,8 @@ const mapDispatchToProps = dispatch => ({
   fetchCurrentPost: currentPost =>
     dispatch(currentPostOperations.fetchCurrentPost(currentPost)),
   updatePost: post => dispatch(currentPostOperations.updatePost(post)),
+  createComment: comment =>
+    dispatch(currentPostOperations.createComment(comment)),
 });
 
 export default connect(

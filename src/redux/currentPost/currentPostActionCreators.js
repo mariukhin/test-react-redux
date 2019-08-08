@@ -38,3 +38,20 @@ export const updatePostError = error => ({
     error,
   },
 });
+export const createCommentStart = () => ({
+  type: ActionType.CREATE_COMMENT_START,
+});
+
+export const createCommentSuccess = comment => ({
+  type: ActionType.CREATE_COMMENT_SUCCESS,
+  payload: {
+    comment,
+  },
+});
+
+export const createCommentError = error => ({
+  type: ActionType.CREATE_COMMENT_ERROR,
+  payload: {
+    error,
+  },
+});
