@@ -3,33 +3,21 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Button } from 'semantic-ui-react';
 import styles from './PostPreview.module.css';
-import Button from '../shared/Button';
 import { setCurrentPostId } from '../../redux/currentPost/currentPostActionCreators';
 import { changeDate } from '../../service/helper';
 
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   font-family: inherit;
-  font-size: 16px;
-  line-height: 24px;
-  font-style: normal;
-
-  padding: 8px 16px;
-  border-radius: 3px;
-  background-color: '#3884ff';
-  transition: all 200ms ease;
-  text-align: center;
-  display: block;
-  color: #3884ff;
-  border: 0;
-  cursor: pointer;
-  margin: 0 auto;
-
-  :hover,
-  :focus {
-    background-color: '#1f65d6';
-  }
+`;
+const ButtonContainer = styled(Button.Group)`
+  display: flex !important;
+  justify-content: center;
+  flex-wrap: nowrap;
+  width: 70%;
+  margin: 0 auto !important;
 `;
 
 class PostPreview extends Component {
@@ -55,21 +43,15 @@ class PostPreview extends Component {
           )}
           <p className={styles.postTitle}>{title}</p>
           <p className={styles.postBody}>{body}</p>
-          <div className={styles.buttonContainer}>
-            <StyledNavLink
-              onClick={() => setCurrentPostId(id)}
-              to={`/posts/${id}`}
-            >
-              Read more
-            </StyledNavLink>
-            <Button
-              backgrColor="rgba(247, 12, 12, 0.993)"
-              hoverColor="rgba(121, 19, 19, 0.993)"
-              onClick={this.deleteBtn}
-            >
+          <ButtonContainer>
+            <Button basic color="blue" onClick={() => setCurrentPostId(id)}>
+              <StyledNavLink to={`/posts/${id}`}>Read more</StyledNavLink>
+            </Button>
+            <Button.Or />
+            <Button negative onClick={this.deleteBtn}>
               Delete
             </Button>
-          </div>
+          </ButtonContainer>
         </div>
       </div>
     );

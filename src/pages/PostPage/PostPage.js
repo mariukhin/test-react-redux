@@ -1,11 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Modal } from 'semantic-ui-react';
-import Button from '../../components/shared/Button';
+import { Modal, Button } from 'semantic-ui-react';
+// import Button from '../../components/shared/Button';
 import * as currentPostSelectors from '../../redux/currentPost/currentPostSelectors';
 import * as currentPostOperations from '../../redux/currentPost/currentPostOperations';
-import styles from './PostPage.module.css';
+import {
+  Container,
+  Wrapper,
+  CreatorText,
+  PostTitle,
+  PostBody,
+  Span,
+  CommentContainer,
+  CommentTitle,
+  CommentText,
+  ButtonContainer,
+  StyledButton,
+} from './styles';
 import Loader from '../../components/shared/Loader/Loader';
 import PostEditor from '../../components/PostEditor/PostEditor';
 import { changeDate } from '../../service/helper';
@@ -89,48 +101,41 @@ class PostPage extends Component {
         {!currentPost || (loading && <Loader />)}
         {currentPost &&
           (!loading && (
-            <div className={styles.container}>
-              <div className={styles.wrapper}>
+            <Container>
+              <Wrapper>
                 {creator && (
-                  <p className={styles.creatorText}>
+                  <CreatorText>
                     {creator} published {changeDate(date)}
-                  </p>
+                  </CreatorText>
                 )}
-                <p className={styles.postTitle}>{title}</p>
-                <p className={styles.postBody}>{body}</p>
-                <span className={styles.span} />
-                <div className={styles.commentContainer}>
-                  <p className={styles.commentTitle}>Comments</p>
+                <PostTitle>{title}</PostTitle>
+                <PostBody>{body}</PostBody>
+                <Span />
+                <CommentContainer>
+                  <CommentTitle>Comments</CommentTitle>
                   {comments && (
-                    <div className={styles.commentBlock}>
+                    <div>
                       {comments.map((item, i) => (
-                        <p className={styles.commentText} key={item.id}>
+                        <CommentText key={item.id}>
                           <b>{i + 1}</b>: {item.body}
-                        </p>
+                        </CommentText>
                       ))}
                     </div>
                   )}
-                  <Button
-                    backgrColor="#1ccc1c"
-                    hoverColor="#117a11"
-                    onClick={this.onAddComment}
-                  >
-                    Add comment
-                  </Button>
-                </div>
-                <span className={styles.span} />
-                <div className={styles.buttonContainer}>
+                </CommentContainer>
+                <StyledButton basic color="green" onClick={this.onAddComment}>
+                  Add comment
+                </StyledButton>
+                <Span />
+                <ButtonContainer>
                   <Button onClick={this.handleBtnBack}>Come back</Button>
-                  <Button
-                    backgrColor="#fa9715"
-                    hoverColor="#885614"
-                    onClick={this.onEditPost}
-                  >
+                  <Button.Or />
+                  <Button color="orange" onClick={this.onEditPost}>
                     Edit post
                   </Button>
-                </div>
-              </div>
-            </div>
+                </ButtonContainer>
+              </Wrapper>
+            </Container>
           ))}
         <Modal
           open={modalShow}
@@ -138,6 +143,7 @@ class PostPage extends Component {
           closeOnDimmerClick
           onClose={this.onModalHandle}
         >
+          <Modal.Header>Edit your post</Modal.Header>
           <Modal.Content>
             <PostEditor
               id={id}
@@ -155,6 +161,7 @@ class PostPage extends Component {
           closeOnDimmerClick
           onClose={this.onCommentModalHandle}
         >
+          <Modal.Header>Add new comment</Modal.Header>
           <Modal.Content>
             <PostEditor
               id={id}

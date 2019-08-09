@@ -6,8 +6,7 @@ import PostPreview from '../../components/PostPreview/PostPreview';
 import * as postsSelectors from '../../redux/posts/postsSelectors';
 import * as postsOperations from '../../redux/posts/postsOperations';
 import Loader from '../../components/shared/Loader/Loader';
-import Button from '../../components/shared/Button';
-import styles from './StartPage.module.css';
+import { Container, PostBlock, StyledButton } from './styles';
 import PostEditor from '../../components/PostEditor/PostEditor';
 
 class StartPage extends Component {
@@ -36,7 +35,7 @@ class StartPage extends Component {
     const infoDate = new Date(Date.now());
     const postToAdd = {
       ...post,
-      date: infoDate.toLocaleDateString(),
+      date: infoDate.toLocaleDateString('en-US'),
     };
     createPost(postToAdd);
     this.onModalHandle();
@@ -52,12 +51,14 @@ class StartPage extends Component {
     const { modalShow } = this.state;
 
     return (
-      <div className={styles.container}>
-        <Button onClick={this.onCreatePost}>Create new post</Button>
+      <Container>
+        <StyledButton positive onClick={this.onCreatePost}>
+          Create new post
+        </StyledButton>
         {!posts || (loading && <Loader />)}
         {posts &&
           (!loading && (
-            <div className={styles.postBlock}>
+            <PostBlock>
               {posts.map(item => (
                 <PostPreview
                   key={item.id}
@@ -65,7 +66,7 @@ class StartPage extends Component {
                   {...item}
                 />
               ))}
-            </div>
+            </PostBlock>
           ))}
         <Modal
           open={modalShow}
@@ -73,11 +74,12 @@ class StartPage extends Component {
           closeOnDimmerClick
           onClose={this.onModalHandle}
         >
+          <Modal.Header>Create your post</Modal.Header>
           <Modal.Content>
             <PostEditor onSave={this.addPost} onCancel={this.onModalHandle} />
           </Modal.Content>
         </Modal>
-      </div>
+      </Container>
     );
   }
 }

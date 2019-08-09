@@ -1,8 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withToastManager } from 'react-toast-notifications';
-import styles from './PostEditor.module.css';
-import Button from '../shared/Button';
+import { Button, Form } from 'semantic-ui-react';
+import styled from 'styled-components';
+
+const ButtonContainer = styled(Button.Group)`
+  width: 30%;
+  margin: 0 auto;
+`;
 
 class PostEditor extends Component {
   state = {
@@ -60,52 +65,60 @@ class PostEditor extends Component {
     const { onCancel, onComment } = this.props;
 
     return (
-      <form className={styles.form} onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleSubmit}>
         {onComment ? (
           <Fragment>
-            <textarea
-              className={styles.textarea}
-              name="comment"
-              value={comment}
-              placeholder="Write comment"
-              onChange={this.handleChange}
-            />
+            <Form.Field>
+              <Form.TextArea
+                label="Your comment"
+                placeholder="Write comment"
+                name="comment"
+                value={comment}
+                onChange={this.handleChange}
+              />
+            </Form.Field>
           </Fragment>
         ) : (
           <Fragment>
-            <input
-              className={styles.input}
-              type="text"
-              name="creator"
-              value={creator}
-              onChange={this.handleChange}
-              placeholder="Enter your name"
-            />
-            <input
-              className={styles.input}
-              type="text"
-              name="title"
-              value={title}
-              onChange={this.handleChange}
-              placeholder="Enter post title"
-            />
-            <textarea
-              className={styles.textarea}
-              name="body"
-              value={body}
-              placeholder="Write post"
-              onChange={this.handleChange}
-            />
+            <Form.Field>
+              <Form.Input
+                label="Creator name"
+                type="text"
+                placeholder="Enter your name"
+                name="creator"
+                value={creator}
+                onChange={this.handleChange}
+              />
+            </Form.Field>
+            <Form.Field>
+              <Form.Input
+                label="Post title"
+                type="text"
+                placeholder="Enter post title"
+                name="title"
+                value={title}
+                onChange={this.handleChange}
+              />
+            </Form.Field>
+            <Form.Field>
+              <Form.TextArea
+                label="Post text"
+                placeholder="Write post"
+                name="body"
+                value={body}
+                onChange={this.handleChange}
+              />
+            </Form.Field>
           </Fragment>
         )}
-
-        <div className={styles.buttonContainer}>
-          <Button backgrColor="#1ccc1c" hoverColor="#117a11" type="submit">
+        <ButtonContainer>
+          <Button positive type="submit">
             Save
           </Button>
+          <Button.Or />
           <Button onClick={onCancel}>Cancel</Button>
-        </div>
-      </form>
+        </ButtonContainer>
+      </Form>
     );
   }
 }
