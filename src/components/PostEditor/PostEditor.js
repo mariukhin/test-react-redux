@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withToastManager } from 'react-toast-notifications';
 import styles from './PostEditor.module.css';
-import Button from '../shared/Button/Button';
+import Button from '../shared/Button';
 
 class PostEditor extends Component {
   state = {
@@ -100,7 +100,9 @@ class PostEditor extends Component {
         )}
 
         <div className={styles.buttonContainer}>
-          <Button type="submit">Save</Button>
+          <Button backgrColor="#1ccc1c" hoverColor="#117a11" type="submit">
+            Save
+          </Button>
           <Button onClick={onCancel}>Cancel</Button>
         </div>
       </form>

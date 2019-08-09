@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Modal } from 'semantic-ui-react';
 import PostPreview from '../../components/PostPreview/PostPreview';
 import * as postsSelectors from '../../redux/posts/postsSelectors';
 import * as postsOperations from '../../redux/posts/postsOperations';
 import Loader from '../../components/shared/Loader/Loader';
-import Button from '../../components/shared/Button/Button';
+import Button from '../../components/shared/Button';
 import styles from './StartPage.module.css';
-import Modal from '../../components/shared/Modal/Modal';
 import PostEditor from '../../components/PostEditor/PostEditor';
 
 class StartPage extends Component {
@@ -67,11 +67,16 @@ class StartPage extends Component {
               ))}
             </div>
           ))}
-        {modalShow && (
-          <Modal onClose={this.onModalHandle}>
+        <Modal
+          open={modalShow}
+          closeOnEscape
+          closeOnDimmerClick
+          onClose={this.onModalHandle}
+        >
+          <Modal.Content>
             <PostEditor onSave={this.addPost} onCancel={this.onModalHandle} />
-          </Modal>
-        )}
+          </Modal.Content>
+        </Modal>
       </div>
     );
   }

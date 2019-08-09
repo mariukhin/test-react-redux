@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Button from '../../components/shared/Button/Button';
+import { Modal } from 'semantic-ui-react';
+import Button from '../../components/shared/Button';
 import * as currentPostSelectors from '../../redux/currentPost/currentPostSelectors';
 import * as currentPostOperations from '../../redux/currentPost/currentPostOperations';
 import styles from './PostPage.module.css';
 import Loader from '../../components/shared/Loader/Loader';
-import Modal from '../../components/shared/Modal/Modal';
 import PostEditor from '../../components/PostEditor/PostEditor';
 import { changeDate } from '../../service/helper';
 
@@ -110,18 +110,35 @@ class PostPage extends Component {
                       ))}
                     </div>
                   )}
-                  <Button onClick={this.onAddComment}>Add comment</Button>
+                  <Button
+                    backgrColor="#1ccc1c"
+                    hoverColor="#117a11"
+                    onClick={this.onAddComment}
+                  >
+                    Add comment
+                  </Button>
                 </div>
                 <span className={styles.span} />
                 <div className={styles.buttonContainer}>
                   <Button onClick={this.handleBtnBack}>Come back</Button>
-                  <Button onClick={this.onEditPost}>Edit post</Button>
+                  <Button
+                    backgrColor="#fa9715"
+                    hoverColor="#885614"
+                    onClick={this.onEditPost}
+                  >
+                    Edit post
+                  </Button>
                 </div>
               </div>
             </div>
           ))}
-        {modalShow && (
-          <Modal onClose={this.onModalHandle}>
+        <Modal
+          open={modalShow}
+          closeOnEscape
+          closeOnDimmerClick
+          onClose={this.onModalHandle}
+        >
+          <Modal.Content>
             <PostEditor
               id={id}
               title={title}
@@ -130,18 +147,23 @@ class PostPage extends Component {
               onSave={this.editPost}
               onCancel={this.onModalHandle}
             />
-          </Modal>
-        )}
-        {commentModal && (
-          <Modal onClose={this.onCommentModalHandle}>
+          </Modal.Content>
+        </Modal>
+        <Modal
+          open={commentModal}
+          closeOnEscape
+          closeOnDimmerClick
+          onClose={this.onCommentModalHandle}
+        >
+          <Modal.Content>
             <PostEditor
               id={id}
               onComment
               onSave={this.addComment}
               onCancel={this.onCommentModalHandle}
             />
-          </Modal>
-        )}
+          </Modal.Content>
+        </Modal>
       </>
     );
   }
